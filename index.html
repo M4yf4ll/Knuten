@@ -164,21 +164,19 @@
             let adminMode = false;
             const ADMIN_PIN = '1234';
 
-            if(document.readyState==='loading'){
-                document.addEventListener('DOMContentLoaded', init);
-            } else { init(); }
+            if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
 
             function init(){
                 const dateEl = document.getElementById('currentDate');
-                if(dateEl){
-                    dateEl.textContent = new Date().toLocaleDateString('sv-SE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-                }
+                if(dateEl){ dateEl.textContent = new Date().toLocaleDateString('sv-SE',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
+
                 loadEntries();
                 setupEvents();
                 hideAdminFeatures();
 
                 const header = document.getElementById('headerTitle');
                 let pressTimer;
+
                 header.addEventListener('mousedown', startPress);
                 header.addEventListener('touchstart', startPress);
                 header.addEventListener('mouseup', cancelPress);
@@ -207,17 +205,11 @@
             }
 
             function hideAdminFeatures(){
-                document.getElementById('exportBtn')?.classList.add('hidden');
-                document.getElementById('exportStatsBtn')?.classList.add('hidden');
-                document.getElementById('entryCard')?.classList.add('hidden');
-                document.getElementById('statsSection')?.classList.add('hidden');
+                document.querySelectorAll('.admin-only').forEach(el=>el.classList.add('hidden'));
             }
 
             function showAdminFeatures(){
-                document.getElementById('exportBtn')?.classList.remove('hidden');
-                document.getElementById('exportStatsBtn')?.classList.remove('hidden');
-                document.getElementById('entryCard')?.classList.remove('hidden');
-                document.getElementById('statsSection')?.classList.remove('hidden');
+                document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));
             }
 
             function loadEntries(){
@@ -225,40 +217,53 @@
                 if(saved){ entries = JSON.parse(saved); updateDisplay(); }
             }
 
-            function saveEntries(){
-                localStorage.setItem('knuten-entries-' + today, JSON.stringify(entries));
-            }
+            function saveEntries(){ localStorage.setItem('knuten-entries-' + today, JSON.stringify(entries)); }
 
             function addEntry(){
-                const nameEl = document.getElementById('name');
-                const ageEl = document.getElementById('age');
-                const genderEl = document.getElementById('gender');
-                const municipalityEl = document.getElementById('municipality');
-                const name = nameEl.value.trim();
-                const age = ageEl.value;
-                const gender = genderEl.value;
-                const municipality = municipalityEl.value;
+                const nameEl=document.getElementById('name');
+                const ageEl=document.getElementById('age');
+                const genderEl=document.getElementById('gender');
+                const municipalityEl=document.getElementById('municipality');
+                const name=nameEl.value.trim();
+                const age=ageEl.value;
+                const gender=genderEl.value;
+                const municipality=municipalityEl.value;
 
-                if(!name || !age || !gender || !municipality){ alert('Vänligen fyll i alla fält!'); return; }
+                if(!name||!age||!gender||!municipality){ alert('Vänligen fyll i alla fält!'); return; }
 
-                const entry = { id: Date.now(), date: today, time: new Date().toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'}), name, age:parseInt(age), gender, municipality };
+                const entry={ id: Date.now(), date:today, time:new Date().toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'}), name, age:parseInt(age), gender, municipality };
                 entries.push(entry);
                 saveEntries();
                 updateDisplay();
 
                 nameEl.value=''; ageEl.value=''; genderEl.value=''; municipalityEl.value='';
-                alert('✅ ' + name + ' har skrivits in!');
+                alert('✅ '+name+' har skrivits in!');
             }
 
-            window.deleteEntry = function(id){ if(confirm('Vill du ta bort denna inskrivning?')){ entries = entries.filter(e=>e.id!==id); saveEntries(); updateDisplay(); } };
+            window.deleteEntry=function(id){ if(confirm('Vill du ta bort denna inskrivning?')){ entries=entries.filter(e=>e.id!==id); saveEntries(); updateDisplay(); } };
 
             function updateDisplay(){
-                const countEl = document.getElementById('visitorCount');
-                if(countEl) countEl.textContent = entries.length;
+                const countEl=document.getElementById('visitorCount');
+                if(countEl) countEl.textContent=entries.length;
 
-                const listEl = document.getElementById('entryList');
+                const listEl=document.getElementById('entryList');
                 if(listEl){
                     if(entries.length===0){
                         listEl.innerHTML='<div class="empty-state">Inga inskrivningar än idag</div>';
                     } else {
-                        listEl.innerHTML=entries.map(e=>`<div class="entry-item"><div class="entry-info"><div><span class="entry-name">${e.name}</span> <span class="entry-time">${e.time}</span></div><div class="entry-details"><span>${e.age} år</span><span>${e.gender}</span><span>${e.municipality}</span></div></div><button class="btn-delete" onclick="deleteEntry
+                        listEl.innerHTML=entries.map(e=>`<div class="entry-item"><div class="entry-info"><div><span class="entry-name">${e.name}</span> <span class="entry-time">${e.time}</span></div><div class="entry-details"><span>${e.age} år</span><span>${e.gender}</span><span>${e.municipality}</span></div></div><button class="btn-delete" onclick="deleteEntry(${e.id})">🗑️</button></div>`).join('');
+                    }
+                }
+
+                if(adminMode) updateStats();
+            }
+
+            function getStats(){
+                if(entries.length===0) return null;
+                const total=entries.length;
+                const avgAge=(entries.reduce((sum,e)=>sum+e.age,0)/entries.length).toFixed(1);
+                const genderCount={};
+                const ageGroups={};
+                const municipalityCount={};
+                entries.forEach(e=>{
+                    genderCount[e.gender]=(genderCount[e
