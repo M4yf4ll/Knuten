@@ -8,55 +8,235 @@
     <title>Ungdomsgården Knuten</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #fb923c 100%); min-height: 100vh; padding: 20px; -webkit-touch-callout: none; -webkit-user-select: none; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #fb923c 100%);
+            min-height: 100vh;
+            padding: 20px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+        }
         input, select, button { -webkit-appearance: none; }
         .container { max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 24px; padding: 32px; margin-bottom: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-        .title { font-size: 32px; font-weight: bold; color: #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
         .date-info { text-align: right; }
         .date-text { color: #6b7280; font-size: 16px; margin-bottom: 8px; }
-        .visitor-count { font-size: 36px; font-weight: bold; color: #9333ea; }
-        .hidden { display: none !important; }
-        input, select { width: 100%; padding: 18px; font-size: 18px; border: 2px solid #d1d5db; border-radius: 12px; background: white; outline: none; }
-        select { background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3e%3cpolyline points="6 9 12 15 18 9"%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 12px center; background-size: 20px; padding-right: 40px; }
-        .btn { width: 100%; padding: 22px; font-size: 22px; font-weight: bold; color: white; background: linear-gradient(90deg, #9333ea, #ec4899); border: none; border-radius: 12px; cursor: pointer; transition: transform 0.2s; }
+        .visitor-count {
+            font-size: 36px;
+            font-weight: bold;
+            color: #9333ea;
+        }
+        .form-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 24px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; text-align: center; }
+            .date-info { text-align: center; }
+            .title { font-size: 24px; }
+        }
+        .form-group { margin-bottom: 16px; }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        input, select {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            background: white;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        select {
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3e%3cpolyline points="6 9 12 15 18 9"%3e%3c/polyline%3e%3c/svg%3e');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+        input:focus, select:focus { border-color: #9333ea; }
+        .btn {
+            width: 100%;
+            padding: 22px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(90deg, #9333ea, #ec4899);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
         .btn:active { transform: scale(0.97); opacity: 0.9; }
-        .btn-secondary { background: #10b981; padding: 14px 24px; font-size: 16px; width: auto; display: inline-block; text-align: center; margin: 4px; }
-        .stats-toggle { background: #f3f4f6; color: #1f2937; border: none; font-size: 18px; font-weight: bold; cursor: pointer; padding: 12px 20px; border-radius: 12px; }
+        .btn-secondary {
+            background: #10b981;
+            padding: 14px 24px;
+            font-size: 16px;
+            width: auto;
+            display: inline-block;
+            text-align: center;
+            margin: 4px;
+        }
+        .stats-toggle {
+            background: #f3f4f6;
+            color: #1f2937;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 12px 20px;
+            border-radius: 12px;
+            -webkit-tap-highlight-color: transparent;
+        }
         .stats-toggle:active { background: #e5e7eb; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; padding-bottom: 24px; border-bottom: 2px solid #e5e7eb; }
-        @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } .header { flex-direction: column; text-align: center; } .date-info { text-align: center; } .title { font-size: 24px; } }
-        .stat-box { padding: 20px; border-radius: 12px; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 24px 0;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+        .stat-box {
+            padding: 20px;
+            border-radius: 12px;
+        }
         .stat-box.purple { background: #f3e8ff; }
         .stat-box.pink { background: #fce7f3; }
         .stat-box.orange { background: #ffedd5; }
         .stat-box.blue { background: #dbeafe; max-height: 200px; overflow-y: auto; }
-        .stat-title { font-weight: bold; color: #374151; margin-bottom: 12px; font-size: 16px; }
-        .stat-item { font-size: 14px; color: #6b7280; margin: 4px 0; }
+        .stat-title {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .stat-item {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 4px 0;
+        }
         .stat-value { font-weight: bold; }
         .stat-value.purple { color: #9333ea; }
         .stat-value.pink { color: #ec4899; }
         .stat-value.orange { color: #fb923c; }
         .stat-value.blue { color: #3b82f6; }
-        .entry-list { max-height: 500px; overflow-y: auto; }
-        .entry-item { background: #f9fafb; padding: 16px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .entry-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .entry-item {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         .entry-info { flex: 1; }
-        .entry-name { font-weight: bold; font-size: 18px; color: #1f2937; margin-bottom: 4px; }
-        .entry-time { color: #9ca3af; font-size: 14px; margin-left: 12px; }
-        .entry-details { display: flex; gap: 16px; font-size: 14px; color: #6b7280; margin-top: 4px; flex-wrap: wrap; }
-        .btn-delete { background: #fee2e2; border: none; color: #ef4444; font-size: 20px; cursor: pointer; padding: 12px; border-radius: 8px; min-width: 44px; min-height: 44px; }
+        .entry-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        .entry-time {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-left: 12px;
+        }
+        .entry-details {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .btn-delete {
+            background: #fee2e2;
+            border: none;
+            color: #ef4444;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
+        }
         .btn-delete:active { background: #fecaca; }
-        .empty-state { text-align: center; color: #9ca3af; padding: 40px; font-size: 16px; }
-        .button-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-        .export-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .empty-state {
+            text-align: center;
+            color: #9ca3af;
+            padding: 40px;
+            font-size: 16px;
+        }
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .export-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <div class="header" id="headerTitle">
-                <div class="title">👥 Ungdomsgården Knuten</div>
+            <div class="header">
+                <div class="title">
+                    👥 Ungdomsgården Knuten
+                </div>
                 <div class="date-info">
                     <div class="date-text" id="currentDate"></div>
                     <div class="visitor-count"><span id="visitorCount">0</span> besökare</div>
@@ -117,153 +297,382 @@
             <button class="btn" id="submitBtn">Skriv in mig!</button>
         </div>
 
-        <div class="card admin-only hidden" id="entryCard">
-            <h3 style="font-size: 20px; font-weight: bold; color: #1f2937; margin-bottom: 16px;">Dagens inskrivningar</h3>
+        <div class="card">
+            <div class="button-row">
+                <button class="stats-toggle" id="statsToggleBtn">
+                    📊 <span id="statsToggleText">Visa statistik</span>
+                </button>
+                <div class="export-buttons">
+                    <button class="btn-secondary hidden" id="exportBtn">
+                        💾 Exportera data
+                    </button>
+                    <button class="btn-secondary hidden" id="exportStatsBtn">
+                        📊 Exportera statistik
+                    </button>
+                </div>
+            </div>
+
+            <div id="statsSection" class="hidden">
+                <div class="stats-grid">
+                    <div class="stat-box purple">
+                        <div class="stat-title">Översikt</div>
+                        <div class="stat-item">Totalt besökare: <span class="stat-value purple" id="statTotal">0</span></div>
+                        <div class="stat-item">Medelålder: <span class="stat-value purple" id="statAvgAge">0</span> år</div>
+                    </div>
+                    <div class="stat-box pink">
+                        <div class="stat-title">Könsfördelning</div>
+                        <div id="statGender"></div>
+                    </div>
+                    <div class="stat-box orange">
+                        <div class="stat-title">Åldersgrupper</div>
+                        <div id="statAge"></div>
+                    </div>
+                    <div class="stat-box blue">
+                        <div class="stat-title">Kommuner</div>
+                        <div id="statMunicipality"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 20px; font-weight: bold; color: #1f2937; margin-bottom: 16px;">
+                Dagens inskrivningar
+            </h3>
             <div id="entryList" class="entry-list">
                 <div class="empty-state">Inga inskrivningar än idag</div>
             </div>
         </div>
-
-        <div class="card admin-only hidden" id="statsSection">
-            <div class="button-row">
-                <button class="stats-toggle" id="statsToggleBtn">📊 <span id="statsToggleText">Visa statistik</span></button>
-                <div class="export-buttons">
-                    <button class="btn-secondary hidden" id="exportBtn">💾 Exportera data</button>
-                    <button class="btn-secondary hidden" id="exportStatsBtn">📊 Exportera statistik</button>
-                </div>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-box purple">
-                    <div class="stat-title">Översikt</div>
-                    <div class="stat-item">Totalt besökare: <span class="stat-value purple" id="statTotal">0</span></div>
-                    <div class="stat-item">Medelålder: <span class="stat-value purple" id="statAvgAge">0</span> år</div>
-                </div>
-                <div class="stat-box pink">
-                    <div class="stat-title">Könsfördelning</div>
-                    <div id="statGender"></div>
-                </div>
-                <div class="stat-box orange">
-                    <div class="stat-title">Åldersgrupper</div>
-                    <div id="statAge"></div>
-                </div>
-                <div class="stat-box blue">
-                    <div class="stat-title">Kommuner</div>
-                    <div id="statMunicipality"></div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        (function(){
+        (function() {
             'use strict';
-
+            
             let entries = [];
             const today = new Date().toLocaleDateString('sv-SE');
-            let adminMode = false;
-            const ADMIN_PIN = '1234';
 
-            if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+            // Vänta på att sidan ska laddas helt
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
 
-            function init(){
+            function init() {
+                console.log('Initierar app...');
+                
+                // Visa datum
                 const dateEl = document.getElementById('currentDate');
-                if(dateEl){ dateEl.textContent = new Date().toLocaleDateString('sv-SE',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
-
+                if (dateEl) {
+                    dateEl.textContent = new Date().toLocaleDateString('sv-SE', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                }
+                
+                // Ladda data
                 loadEntries();
-                setupEvents();
-                hideAdminFeatures();
+                
+                // Koppla events med touchstart för iPad
+                const submitBtn = document.getElementById('submitBtn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        addEntry();
+                    }, { passive: false });
+                    submitBtn.addEventListener('click', addEntry);
+                }
+                
+                const statsBtn = document.getElementById('statsToggleBtn');
+                if (statsBtn) {
+                    statsBtn.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        toggleStats();
+                    }, { passive: false });
+                    statsBtn.addEventListener('click', toggleStats);
+                }
+                
+                const exportBtn = document.getElementById('exportBtn');
+                if (exportBtn) {
+                    exportBtn.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        exportCSV();
+                    }, { passive: false });
+                    exportBtn.addEventListener('click', exportCSV);
+                }
+                
+                const exportStatsBtn = document.getElementById('exportStatsBtn');
+                if (exportStatsBtn) {
+                    exportStatsBtn.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        exportStats();
+                    }, { passive: false });
+                    exportStatsBtn.addEventListener('click', exportStats);
+                }
+                
+                console.log('App initierad!');
+            }
 
-                const header = document.getElementById('headerTitle');
-                let pressTimer;
-
-                header.addEventListener('mousedown', startPress);
-                header.addEventListener('touchstart', startPress);
-                header.addEventListener('mouseup', cancelPress);
-                header.addEventListener('mouseleave', cancelPress);
-                header.addEventListener('touchend', cancelPress);
-
-                function startPress(){ pressTimer = setTimeout(activateAdmin, 2000); }
-                function cancelPress(){ clearTimeout(pressTimer); }
-
-                function activateAdmin(){
-                    const pin = prompt('Ange admin-PIN:');
-                    if(pin===ADMIN_PIN){
-                        adminMode = true;
-                        alert('✅ Admin-läge aktiverat');
-                        showAdminFeatures();
+            function loadEntries() {
+                try {
+                    const saved = localStorage.getItem('knuten-entries-' + today);
+                    if (saved) {
+                        entries = JSON.parse(saved);
+                        console.log('Laddade ' + entries.length + ' inskrivningar');
                         updateDisplay();
-                    } else { alert('❌ Fel PIN'); }
+                    }
+                } catch (e) {
+                    console.log('Inga tidigare data:', e);
                 }
             }
 
-            function setupEvents(){
-                document.getElementById('submitBtn')?.addEventListener('click', addEntry);
-                document.getElementById('statsToggleBtn')?.addEventListener('click', toggleStats);
-                document.getElementById('exportBtn')?.addEventListener('click', exportCSV);
-                document.getElementById('exportStatsBtn')?.addEventListener('click', exportStats);
+            function saveEntries() {
+                try {
+                    localStorage.setItem('knuten-entries-' + today, JSON.stringify(entries));
+                    console.log('Sparade ' + entries.length + ' inskrivningar');
+                } catch (e) {
+                    alert('Kunde inte spara data: ' + e.message);
+                }
             }
 
-            function hideAdminFeatures(){
-                document.querySelectorAll('.admin-only').forEach(el=>el.classList.add('hidden'));
-            }
+            function addEntry() {
+                console.log('Lägger till inskrivning...');
+                
+                const nameEl = document.getElementById('name');
+                const ageEl = document.getElementById('age');
+                const genderEl = document.getElementById('gender');
+                const municipalityEl = document.getElementById('municipality');
+                
+                const name = nameEl ? nameEl.value.trim() : '';
+                const age = ageEl ? ageEl.value : '';
+                const gender = genderEl ? genderEl.value : '';
+                const municipality = municipalityEl ? municipalityEl.value : '';
 
-            function showAdminFeatures(){
-                document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));
-            }
+                console.log('Värden:', { name, age, gender, municipality });
 
-            function loadEntries(){
-                const saved = localStorage.getItem('knuten-entries-' + today);
-                if(saved){ entries = JSON.parse(saved); updateDisplay(); }
-            }
+                if (!name || !age || !gender || !municipality) {
+                    alert('Vänligen fyll i alla fält!');
+                    return;
+                }
 
-            function saveEntries(){ localStorage.setItem('knuten-entries-' + today, JSON.stringify(entries)); }
+                const entry = {
+                    id: Date.now(),
+                    date: today,
+                    time: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
+                    name: name,
+                    age: parseInt(age),
+                    gender: gender,
+                    municipality: municipality
+                };
 
-            function addEntry(){
-                const nameEl=document.getElementById('name');
-                const ageEl=document.getElementById('age');
-                const genderEl=document.getElementById('gender');
-                const municipalityEl=document.getElementById('municipality');
-                const name=nameEl.value.trim();
-                const age=ageEl.value;
-                const gender=genderEl.value;
-                const municipality=municipalityEl.value;
-
-                if(!name||!age||!gender||!municipality){ alert('Vänligen fyll i alla fält!'); return; }
-
-                const entry={ id: Date.now(), date:today, time:new Date().toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'}), name, age:parseInt(age), gender, municipality };
                 entries.push(entry);
+                console.log('Inskrivning tillagd:', entry);
+                
                 saveEntries();
                 updateDisplay();
 
-                nameEl.value=''; ageEl.value=''; genderEl.value=''; municipalityEl.value='';
-                alert('✅ '+name+' har skrivits in!');
+                // Rensa formulär
+                if (nameEl) nameEl.value = '';
+                if (ageEl) ageEl.value = '';
+                if (genderEl) genderEl.value = '';
+                if (municipalityEl) municipalityEl.value = '';
+                
+                alert('✅ ' + name + ' har skrivits in!');
             }
 
-            window.deleteEntry=function(id){ if(confirm('Vill du ta bort denna inskrivning?')){ entries=entries.filter(e=>e.id!==id); saveEntries(); updateDisplay(); } };
+            window.deleteEntry = function(id) {
+                if (confirm('Vill du ta bort denna inskrivning?')) {
+                    entries = entries.filter(e => e.id !== id);
+                    saveEntries();
+                    updateDisplay();
+                }
+            };
 
-            function updateDisplay(){
-                const countEl=document.getElementById('visitorCount');
-                if(countEl) countEl.textContent=entries.length;
-
-                const listEl=document.getElementById('entryList');
-                if(listEl){
-                    if(entries.length===0){
-                        listEl.innerHTML='<div class="empty-state">Inga inskrivningar än idag</div>';
-                    } else {
-                        listEl.innerHTML=entries.map(e=>`<div class="entry-item"><div class="entry-info"><div><span class="entry-name">${e.name}</span> <span class="entry-time">${e.time}</span></div><div class="entry-details"><span>${e.age} år</span><span>${e.gender}</span><span>${e.municipality}</span></div></div><button class="btn-delete" onclick="deleteEntry(${e.id})">🗑️</button></div>`).join('');
-                    }
+            function updateDisplay() {
+                const countEl = document.getElementById('visitorCount');
+                if (countEl) {
+                    countEl.textContent = entries.length;
+                }
+                
+                const exportBtn = document.getElementById('exportBtn');
+                const exportStatsBtn = document.getElementById('exportStatsBtn');
+                
+                if (entries.length > 0) {
+                    if (exportBtn) exportBtn.classList.remove('hidden');
+                    if (exportStatsBtn) exportStatsBtn.classList.remove('hidden');
+                } else {
+                    if (exportBtn) exportBtn.classList.add('hidden');
+                    if (exportStatsBtn) exportStatsBtn.classList.add('hidden');
                 }
 
-                if(adminMode) updateStats();
+                const listEl = document.getElementById('entryList');
+                if (!listEl) return;
+                
+                if (entries.length === 0) {
+                    listEl.innerHTML = '<div class="empty-state">Inga inskrivningar än idag</div>';
+                } else {
+                    listEl.innerHTML = entries.map(e => `
+                        <div class="entry-item">
+                            <div class="entry-info">
+                                <div>
+                                    <span class="entry-name">${e.name}</span>
+                                    <span class="entry-time">${e.time}</span>
+                                </div>
+                                <div class="entry-details">
+                                    <span>${e.age} år</span>
+                                    <span>${e.gender}</span>
+                                    <span>${e.municipality}</span>
+                                </div>
+                            </div>
+                            <button class="btn-delete" onclick="deleteEntry(${e.id})">🗑️</button>
+                        </div>
+                    `).join('');
+                }
+
+                updateStats();
             }
 
-            function getStats(){
-                if(entries.length===0) return null;
-                const total=entries.length;
-                const avgAge=(entries.reduce((sum,e)=>sum+e.age,0)/entries.length).toFixed(1);
-                const genderCount={};
-                const ageGroups={};
-                const municipalityCount={};
-                entries.forEach(e=>{
-                    genderCount[e.gender]=(genderCount[e
+            function getStats() {
+                if (entries.length === 0) return null;
+
+                const total = entries.length;
+                const avgAge = (entries.reduce((sum, e) => sum + e.age, 0) / entries.length).toFixed(1);
+
+                const genderCount = {};
+                const ageGroups = {};
+                const municipalityCount = {};
+
+                entries.forEach(e => {
+                    genderCount[e.gender] = (genderCount[e.gender] || 0) + 1;
+                    municipalityCount[e.municipality] = (municipalityCount[e.municipality] || 0) + 1;
+                    
+                    const group = e.age < 17 ? '16' : e.age < 19 ? '17-18' : '19-20';
+                    ageGroups[group] = (ageGroups[group] || 0) + 1;
+                });
+
+                return { total, avgAge, genderCount, ageGroups, municipalityCount };
+            }
+
+            function updateStats() {
+                const stats = getStats();
+                if (!stats) return;
+
+                const totalEl = document.getElementById('statTotal');
+                const avgAgeEl = document.getElementById('statAvgAge');
+                
+                if (totalEl) totalEl.textContent = stats.total;
+                if (avgAgeEl) avgAgeEl.textContent = stats.avgAge;
+
+                const genderEl = document.getElementById('statGender');
+                if (genderEl) {
+                    genderEl.innerHTML = Object.entries(stats.genderCount)
+                        .map(([k, v]) => `<div class="stat-item">${k}: <span class="stat-value pink">${v}</span></div>`)
+                        .join('');
+                }
+
+                const ageEl = document.getElementById('statAge');
+                if (ageEl) {
+                    ageEl.innerHTML = Object.entries(stats.ageGroups)
+                        .map(([k, v]) => `<div class="stat-item">${k} år: <span class="stat-value orange">${v}</span></div>`)
+                        .join('');
+                }
+
+                const munEl = document.getElementById('statMunicipality');
+                if (munEl) {
+                    munEl.innerHTML = Object.entries(stats.municipalityCount)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([k, v]) => `<div class="stat-item">${k}: <span class="stat-value blue">${v}</span></div>`)
+                        .join('');
+                }
+            }
+
+            function toggleStats() {
+                const section = document.getElementById('statsSection');
+                const text = document.getElementById('statsToggleText');
+                
+                if (!section || !text) return;
+                
+                const isHidden = section.classList.contains('hidden');
+                
+                if (isHidden) {
+                    section.classList.remove('hidden');
+                    text.textContent = 'Dölj statistik';
+                } else {
+                    section.classList.add('hidden');
+                    text.textContent = 'Visa statistik';
+                }
+            }
+
+            function exportCSV() {
+                const headers = ['Datum', 'Tid', 'Namn', 'Ålder', 'Kön', 'Kommun'];
+                const rows = entries.map(e => [e.date, e.time, e.name, e.age, e.gender, e.municipality]);
+                const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+                
+                downloadFile(csv, 'knuten-data-' + today + '.csv');
+            }
+
+            function exportStats() {
+                const stats = getStats();
+                if (!stats) return;
+
+                let csv = 'STATISTIK FÖR ' + today + '\n\n';
+                
+                csv += 'ÖVERSIKT\n';
+                csv += 'Totalt besökare,' + stats.total + '\n';
+                csv += 'Medelålder,' + stats.avgAge + ' år\n\n';
+                
+                csv += 'KÖNSFÖRDELNING\n';
+                Object.entries(stats.genderCount).forEach(([k, v]) => {
+                    csv += k + ',' + v + '\n';
+                });
+                csv += '\n';
+                
+                csv += 'ÅLDERSGRUPPER\n';
+                Object.entries(stats.ageGroups).forEach(([k, v]) => {
+                    csv += k + ' år,' + v + '\n';
+                });
+                csv += '\n';
+                
+                csv += 'KOMMUNER\n';
+                Object.entries(stats.municipalityCount)
+                    .sort((a, b) => b[1] - a[1])
+                    .forEach(([k, v]) => {
+                        csv += k + ',' + v + '\n';
+                    });
+                
+                downloadFile(csv, 'knuten-statistik-' + today + '.csv');
+            }
+
+            function downloadFile(content, filename) {
+                try {
+                    const blob = new Blob(['\ufeff' + content], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    
+                    // För iPad
+                    const event = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    link.dispatchEvent(event);
+                    
+                    setTimeout(function() {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 100);
+                    
+                    alert('✅ Filen har laddats ner!');
+                } catch (e) {
+                    alert('❌ Kunde inte exportera: ' + e.message);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
