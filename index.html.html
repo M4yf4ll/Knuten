@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ungdomsgården Knuten</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #fb923c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .date-info { text-align: right; }
+        .date-text { color: #6b7280; font-size: 16px; margin-bottom: 8px; }
+        .visitor-count { font-size: 36px; font-weight: bold; color: #9333ea; }
+        .form-title { font-size: 24px; font-weight: bold; color: #1f2937; margin-bottom: 24px; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; text-align: center; }
+            .date-info { text-align: center; }
+        }
+        .form-group { margin-bottom: 16px; }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        input, select {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            background: white;
+        }
+        input:focus, select:focus { border-color: #9333ea; outline: none; }
+        .btn {
+            width: 100%;
+            padding: 22px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(90deg, #9333ea, #ec4899);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .btn:active { opacity: 0.8; }
+        .btn-secondary {
+            background: #10b981;
+            padding: 14px 24px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 4px;
+        }
+        .stats-toggle {
+            background: #f3f4f6;
+            color: #1f2937;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 12px 20px;
+            border-radius: 12px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 24px 0;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
+        .stat-box { padding: 20px; border-radius: 12px; }
+        .stat-box.purple { background: #f3e8ff; }
+        .stat-box.pink { background: #fce7f3; }
+        .stat-box.orange { background: #ffedd5; }
+        .stat-box.blue { background: #dbeafe; max-height: 200px; overflow-y: auto; }
+        .stat-title { font-weight: bold; color: #374151; margin-bottom: 12px; font-size: 16px; }
+        .stat-item { font-size: 14px; color: #6b7280; margin: 4px 0; }
+        .stat-value { font-weight: bold; }
+        .stat-value.purple { color: #9333ea; }
+        .stat-value.pink { color: #ec4899; }
+        .stat-value.orange { color: #fb923c; }
+        .stat-value.blue { color: #3b82f6; }
+        .entry-list { max-height: 500px; overflow-y: auto; }
+        .entry-item {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .entry-info { flex: 1; }
+        .entry-name { font-weight: bold; font-size: 18px; color: #1f2937; }
+        .entry-time { color: #9ca3af; font-size: 14px; margin-left: 12px; }
+        .entry-details {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .btn-delete {
+            background: #fee2e2;
+            border: none;
+            color: #ef4444;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .empty-state { text-align: center; color: #9ca3af; padding: 40px; font-size: 16px; }
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .export-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="title">👥 Ungdomsgården Knuten</div>
+                <div class="date-info">
+                    <div class="date-text" id="currentDate"></div>
+                    <div class="visitor-count"><span id="visitorCount">0</span> besökare</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="form-title">➕ Ny inskrivning</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Namn</label>
+                    <input type="text" id="name" placeholder="Skriv ditt namn">
+                </div>
+                <div class="form-group">
+                    <label>Ålder</label>
+                    <select id="age">
+                        <option value="">Välj ålder</option>
+                        <option value="16">16 år</option>
+                        <option value="17">17 år</option>
+                        <option value="18">18 år</option>
+                        <option value="19">19 år</option>
+                        <option value="20">20 år</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kön</label>
+                    <select id="gender">
+                        <option value="">Välj kön</option>
+                        <option value="Flicka">Flicka</option>
+                        <option value="Pojke">Pojke</option>
+                        <option value="Annan">Annan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kommun</label>
+                    <select id="municipality">
+                        <option value="">Välj kommun</option>
+                        <option value="Brändö">Brändö</option>
+                        <option value="Eckerö">Eckerö</option>
+                        <option value="Finström">Finström</option>
+                        <option value="Föglö">Föglö</option>
+                        <option value="Geta">Geta</option>
+                        <option value="Hammarland">Hammarland</option>
+                        <option value="Jomala">Jomala</option>
+                        <option value="Kumlinge">Kumlinge</option>
+                        <option value="Kökar">Kökar</option>
+                        <option value="Lemland">Lemland</option>
+                        <option value="Lumparland">Lumparland</option>
+                        <option value="Mariehamn">Mariehamn</option>
+                        <option value="Saltvik">Saltvik</option>
+                        <option value="Sottunga">Sottunga</option>
+                        <option value="Sund">Sund</option>
+                        <option value="Vårdö">Vårdö</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn" type="button" id="submitBtn">Skriv in mig!</button>
+        </div>
+
+        <div class="card">
+            <div class="button-row">
+                <button class="stats-toggle" type="button" id="statsToggleBtn">
+                    📊 <span id="statsToggleText">Visa statistik</span>
+                </button>
+                <div class="export-buttons">
+                    <button class="btn-secondary hidden" type="button" id="exportBtn">💾 Exportera data</button>
+                    <button class="btn-secondary hidden" type="button" id="exportStatsBtn">📊 Exportera statistik</button>
+                </div>
+            </div>
+
+            <div id="statsSection" class="hidden">
+                <div class="stats-grid">
+                    <div class="stat-box purple">
+                        <div class="stat-title">Översikt</div>
+                        <div class="stat-item">Totalt besökare: <span class="stat-value purple" id="statTotal">0</span></div>
+                        <div class="stat-item">Medelålder: <span class="stat-value purple" id="statAvgAge">0</span> år</div>
+                    </div>
+                    <div class="stat-box pink">
+                        <div class="stat-title">Könsfördelning</div>
+                        <div id="statGender"></div>
+                    </div>
+                    <div class="stat-box orange">
+                        <div class="stat-title">Åldersgrupper</div>
+                        <div id="statAge"></div>
+                    </div>
+                    <div class="stat-box blue">
+                        <div class="stat-title">Kommuner</div>
+                        <div id="statMunicipality"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 20px; font-weight: bold; color: #1f2937; margin-bottom: 16px;">Dagens inskrivningar</h3>
+            <div id="entryList" class="entry-list">
+                <div class="empty-state">Inga inskrivningar än idag</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var entries = [];
+        var today = new Date().toLocaleDateString('sv-SE');
+
+        // Vänta tills allt är laddat
+        window.onload = function() {
+            // Visa datum
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('sv-SE', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+
+            // Ladda befintliga inskrivningar
+            try {
+                var saved = localStorage.getItem('knuten-entries-' + today);
+                if (saved) {
+                    entries = JSON.parse(saved);
+                    updateDisplay();
+                }
+            } catch (e) {}
+
+            // Koppla knappen
+            document.getElementById('submitBtn').onclick = function() {
+                alert('Knappen fungerar!'); // TEST
+            var name = document.getElementById('name').value.trim();
+            var age = document.getElementById('age').value;
+            var gender = document.getElementById('gender').value;
+            var municipality = document.getElementById('municipality').value;
+
+            if (!name || !age || !gender || !municipality) {
+                alert('Vänligen fyll i alla fält!');
+                return;
+            }
+
+            var entry = {
+                id: Date.now(),
+                date: today,
+                time: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
+                name: name,
+                age: parseInt(age),
+                gender: gender,
+                municipality: municipality
+            };
+
+            entries.push(entry);
+            localStorage.setItem('knuten-entries-' + today, JSON.stringify(entries));
+            
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('municipality').value = '';
+            
+            updateDisplay();
+            alert('✅ ' + name + ' har skrivits in!');
+        };
+
+        document.getElementById('statsToggleBtn').onclick = function() {
+            var section = document.getElementById('statsSection');
+            var text = document.getElementById('statsToggleText');
+            
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                text.textContent = 'Dölj statistik';
+            } else {
+                section.classList.add('hidden');
+                text.textContent = 'Visa statistik';
+            }
+        };
+
+        document.getElementById('exportBtn').onclick = function() {
+            var csv = 'Datum,Tid,Namn,Ålder,Kön,Kommun\n';
+            entries.forEach(function(e) {
+                csv += e.date + ',' + e.time + ',' + e.name + ',' + e.age + ',' + e.gender + ',' + e.municipality + '\n';
+            });
+            download(csv, 'knuten-data-' + today + '.csv');
+        };
+
+        document.getElementById('exportStatsBtn').onclick = function() {
+            var stats = getStats();
+            var csv = 'STATISTIK FÖR ' + today + '\n\n';
+            csv += 'ÖVERSIKT\nTotalt besökare,' + stats.total + '\nMedelålder,' + stats.avgAge + ' år\n\n';
+            csv += 'KÖNSFÖRDELNING\n';
+            for (var k in stats.genderCount) csv += k + ',' + stats.genderCount[k] + '\n';
+            csv += '\nÅLDERSGRUPPER\n';
+            for (var k in stats.ageGroups) csv += k + ' år,' + stats.ageGroups[k] + '\n';
+            csv += '\nKOMMUNER\n';
+            var sorted = Object.keys(stats.municipalityCount).sort(function(a,b) {
+                return stats.municipalityCount[b] - stats.municipalityCount[a];
+            });
+            sorted.forEach(function(k) {
+                csv += k + ',' + stats.municipalityCount[k] + '\n';
+            });
+            download(csv, 'knuten-statistik-' + today + '.csv');
+        };
+    }; // Slut på window.onload
+
+        function download(content, filename) {
+            var blob = new Blob(['\ufeff' + content], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            alert('✅ Nedladdad!');
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Ta bort?')) {
+                entries = entries.filter(function(e) { return e.id !== id; });
+                localStorage.setItem('knuten-entries-' + today, JSON.stringify(entries));
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('visitorCount').textContent = entries.length;
+            
+            var exportBtn = document.getElementById('exportBtn');
+            var exportStatsBtn = document.getElementById('exportStatsBtn');
+            if (entries.length > 0) {
+                exportBtn.classList.remove('hidden');
+                exportStatsBtn.classList.remove('hidden');
+            } else {
+                exportBtn.classList.add('hidden');
+                exportStatsBtn.classList.add('hidden');
+            }
+
+            var listEl = document.getElementById('entryList');
+            if (entries.length === 0) {
+                listEl.innerHTML = '<div class="empty-state">Inga inskrivningar än idag</div>';
+            } else {
+                listEl.innerHTML = entries.map(function(e) {
+                    return '<div class="entry-item">' +
+                        '<div class="entry-info">' +
+                        '<div><span class="entry-name">' + e.name + '</span>' +
+                        '<span class="entry-time">' + e.time + '</span></div>' +
+                        '<div class="entry-details">' +
+                        '<span>' + e.age + ' år</span>' +
+                        '<span>' + e.gender + '</span>' +
+                        '<span>' + e.municipality + '</span>' +
+                        '</div></div>' +
+                        '<button class="btn-delete" onclick="deleteEntry(' + e.id + ')">🗑️</button>' +
+                        '</div>';
+                }).join('');
+            }
+
+            updateStats();
+        }
+
+        function getStats() {
+            var total = entries.length;
+            var avgAge = entries.reduce(function(sum, e) { return sum + e.age; }, 0) / entries.length;
+            
+            var genderCount = {};
+            var ageGroups = {};
+            var municipalityCount = {};
+
+            entries.forEach(function(e) {
+                genderCount[e.gender] = (genderCount[e.gender] || 0) + 1;
+                municipalityCount[e.municipality] = (municipalityCount[e.municipality] || 0) + 1;
+                var group = e.age < 17 ? '16' : e.age < 19 ? '17-18' : '19-20';
+                ageGroups[group] = (ageGroups[group] || 0) + 1;
+            });
+
+            return { total: total, avgAge: avgAge.toFixed(1), genderCount: genderCount, ageGroups: ageGroups, municipalityCount: municipalityCount };
+        }
+
+        function updateStats() {
+            if (entries.length === 0) return;
+            var stats = getStats();
+
+            document.getElementById('statTotal').textContent = stats.total;
+            document.getElementById('statAvgAge').textContent = stats.avgAge;
+
+            var html = '';
+            for (var k in stats.genderCount) {
+                html += '<div class="stat-item">' + k + ': <span class="stat-value pink">' + stats.genderCount[k] + '</span></div>';
+            }
+            document.getElementById('statGender').innerHTML = html;
+
+            html = '';
+            for (var k in stats.ageGroups) {
+                html += '<div class="stat-item">' + k + ' år: <span class="stat-value orange">' + stats.ageGroups[k] + '</span></div>';
+            }
+            document.getElementById('statAge').innerHTML = html;
+
+            html = '';
+            var sorted = Object.keys(stats.municipalityCount).sort(function(a,b) {
+                return stats.municipalityCount[b] - stats.municipalityCount[a];
+            });
+            sorted.forEach(function(k) {
+                html += '<div class="stat-item">' + k + ': <span class="stat-value blue">' + stats.municipalityCount[k] + '</span></div>';
+            });
+            document.getElementById('statMunicipality').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
