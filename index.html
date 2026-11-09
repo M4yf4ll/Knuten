@@ -142,21 +142,16 @@
         </div>
 
         <div class="card">
-            <div class="form-title">➕ Ny inskrivning</div>
+            <div class="form-title">➕ Registrera besök</div>
+            <p class="stat-item">Inga namn eller individuella besöksuppgifter sparas. Endast dagens sammanräknade statistik sparas i den här webbläsaren.</p>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Namn</label>
-                    <input type="text" id="name" placeholder="Skriv ditt namn">
-                </div>
-                <div class="form-group">
-                    <label>Ålder</label>
+                    <label>Åldersgrupp</label>
                     <select id="age">
-                        <option value="">Välj ålder</option>
+                        <option value="">Välj åldersgrupp</option>
                         <option value="16">16 år</option>
-                        <option value="17">17 år</option>
-                        <option value="18">18 år</option>
-                        <option value="19">19 år</option>
-                        <option value="20">20 år</option>
+                        <option value="17-18">17–18 år</option>
+                        <option value="19-20">19–20 år</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -191,7 +186,7 @@
                     </select>
                 </div>
             </div>
-            <button class="btn" type="button" id="submitBtn">Skriv in mig!</button>
+            <button class="btn" type="button" id="submitBtn">Registrera besök</button>
         </div>
 
         <div class="card">
@@ -200,7 +195,6 @@
                     📊 <span id="statsToggleText">Visa statistik</span>
                 </button>
                 <div class="export-buttons">
-                    <button class="btn-secondary hidden" type="button" id="exportBtn">💾 Exportera data</button>
                     <button class="btn-secondary hidden" type="button" id="exportStatsBtn">📊 Exportera statistik</button>
                 </div>
             </div>
@@ -210,7 +204,6 @@
                     <div class="stat-box purple">
                         <div class="stat-title">Översikt</div>
                         <div class="stat-item">Totalt besökare: <span class="stat-value purple" id="statTotal">0</span></div>
-                        <div class="stat-item">Medelålder: <span class="stat-value purple" id="statAvgAge">0</span> år</div>
                     </div>
                     <div class="stat-box pink">
                         <div class="stat-title">Könsfördelning</div>
@@ -231,29 +224,31 @@
 
     <script>
         (function() {
-            var entries = [];
             var today = new Date().toLocaleDateString('sv-SE');
+            var storageKey = 'knuten-stats-' + today;
+            var stats = { total: 0, genderCount: {}, ageGroups: {}, municipalityCount: {} };
 
-            // Funktion för att rensa gammal data
             function cleanOldData() {
                 try {
-                    var currentDate = new Date().toLocaleDateString('sv-SE');
                     var allKeys = Object.keys(localStorage);
                     
                     allKeys.forEach(function(key) {
-                        if (key.startsWith('knuten-entries-') && key !== 'knuten-entries-' + currentDate) {
+                        if (key.startsWith('knuten-entries-') ||
+                            (key.startsWith('knuten-stats-') && key !== storageKey)) {
                             localStorage.removeItem(key);
                         }
                     });
-                } catch(e) {}
+                    return true;
+                } catch (e) {
+                    alert('Kunde inte rensa äldre inskrivningsdata. Ingen ny statistik har registrerats.');
+                    return false;
+                }
             }
 
-            // Vänta tills allt är laddat
             window.onload = function() {
-                // Rensa gammal data först
-                cleanOldData();
-                
-                // Visa datum
+                var submitBtn = document.getElementById('submitBtn');
+                var storageReady = cleanOldData();
+
                 var dateEl = document.getElementById('currentDate');
                 if (dateEl) {
                     dateEl.textContent = new Date().toLocaleDateString('sv-SE', { 
@@ -261,86 +256,75 @@
                     });
                 }
 
-                // Ladda befintliga inskrivningar
-                try {
-                    var saved = localStorage.getItem('knuten-entries-' + today);
-                    if (saved) {
-                        entries = JSON.parse(saved);
-                        updateDisplay();
+                if (storageReady) {
+                    try {
+                        var saved = localStorage.getItem(storageKey);
+                        if (saved) stats = JSON.parse(saved);
+                    } catch (e) {
+                        alert('Kunde inte läsa dagens statistik. Inga nya besök kan registreras.');
+                        storageReady = false;
                     }
-                } catch (e) {}
-
-                // Koppla submit-knappen
-                var submitBtn = document.getElementById('submitBtn');
-                if (submitBtn) {
-                    submitBtn.onclick = handleSubmit;
                 }
 
-                // Koppla stats-knappen
+                if (submitBtn) {
+                    submitBtn.onclick = handleSubmit;
+                    submitBtn.disabled = !storageReady;
+                }
+
                 var statsBtn = document.getElementById('statsToggleBtn');
                 if (statsBtn) {
                     statsBtn.onclick = toggleStats;
-                }
-
-                // Koppla export-knappar
-                var exportBtn = document.getElementById('exportBtn');
-                if (exportBtn) {
-                    exportBtn.onclick = exportCSV;
                 }
 
                 var exportStatsBtn = document.getElementById('exportStatsBtn');
                 if (exportStatsBtn) {
                     exportStatsBtn.onclick = exportStats;
                 }
+                updateDisplay();
             };
 
             function handleSubmit() {
-                var nameEl = document.getElementById('name');
                 var ageEl = document.getElementById('age');
                 var genderEl = document.getElementById('gender');
                 var municipalityEl = document.getElementById('municipality');
 
-                if (!nameEl || !ageEl || !genderEl || !municipalityEl) {
+                if (!ageEl || !genderEl || !municipalityEl) {
                     alert('Fel: Formuläret kunde inte laddas korrekt!');
                     return;
                 }
 
-                var name = nameEl.value.trim();
                 var age = ageEl.value;
                 var gender = genderEl.value;
                 var municipality = municipalityEl.value;
 
-                if (!name || !age || !gender || !municipality) {
+                if (!age || !gender || !municipality) {
                     alert('Vänligen fyll i alla fält!');
                     return;
                 }
 
-                var entry = {
-                    id: Date.now(),
-                    date: today,
-                    time: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
-                    name: name,
-                    age: parseInt(age),
-                    gender: gender,
-                    municipality: municipality
+                var nextStats = {
+                    total: stats.total + 1,
+                    genderCount: Object.assign({}, stats.genderCount),
+                    ageGroups: Object.assign({}, stats.ageGroups),
+                    municipalityCount: Object.assign({}, stats.municipalityCount)
                 };
-
-                entries.push(entry);
+                nextStats.genderCount[gender] = (nextStats.genderCount[gender] || 0) + 1;
+                nextStats.ageGroups[age] = (nextStats.ageGroups[age] || 0) + 1;
+                nextStats.municipalityCount[municipality] = (nextStats.municipalityCount[municipality] || 0) + 1;
                 
                 try {
-                    localStorage.setItem('knuten-entries-' + today, JSON.stringify(entries));
-                } catch(e) {
-                    alert('Kunde inte spara data!');
+                    localStorage.setItem(storageKey, JSON.stringify(nextStats));
+                } catch (e) {
+                    alert('Kunde inte spara statistiken. Besöket har inte registrerats.');
                     return;
                 }
-                
-                nameEl.value = '';
+                stats = nextStats;
                 ageEl.value = '';
                 genderEl.value = '';
                 municipalityEl.value = '';
                 
                 updateDisplay();
-                alert('✅ ' + name + ' har skrivits in!');
+                alert('✅ Besöket har registrerats.');
             }
 
             function toggleStats() {
@@ -358,20 +342,11 @@
                 }
             }
 
-            function exportCSV() {
-                var csv = 'Datum,Tid,Namn,Ålder,Kön,Kommun\n';
-                entries.forEach(function(e) {
-                    csv += e.date + ',' + e.time + ',' + e.name + ',' + e.age + ',' + e.gender + ',' + e.municipality + '\n';
-                });
-                download(csv, 'knuten-data-' + today + '.csv');
-            }
-
             function exportStats() {
-                var stats = getStats();
-                if (!stats) return;
+                if (stats.total === 0) return;
 
                 var csv = 'STATISTIK FÖR ' + today + '\n\n';
-                csv += 'ÖVERSIKT\nTotalt besökare,' + stats.total + '\nMedelålder,' + stats.avgAge + ' år\n\n';
+                csv += 'ÖVERSIKT\nTotalt besökare,' + stats.total + '\n\n';
                 csv += 'KÖNSFÖRDELNING\n';
                 for (var k in stats.genderCount) {
                     csv += k + ',' + stats.genderCount[k] + '\n';
@@ -412,60 +387,24 @@
             function updateDisplay() {
                 var countEl = document.getElementById('visitorCount');
                 if (countEl) {
-                    countEl.textContent = entries.length;
+                    countEl.textContent = stats.total;
                 }
                 
-                var exportBtn = document.getElementById('exportBtn');
                 var exportStatsBtn = document.getElementById('exportStatsBtn');
                 
-                if (entries.length > 0) {
-                    if (exportBtn) exportBtn.classList.remove('hidden');
+                if (stats.total > 0) {
                     if (exportStatsBtn) exportStatsBtn.classList.remove('hidden');
                 } else {
-                    if (exportBtn) exportBtn.classList.add('hidden');
                     if (exportStatsBtn) exportStatsBtn.classList.add('hidden');
                 }
 
                 updateStats();
             }
 
-            function getStats() {
-                if (entries.length === 0) return null;
-
-                var total = entries.length;
-                var avgAge = entries.reduce(function(sum, e) { return sum + e.age; }, 0) / entries.length;
-                
-                var genderCount = {};
-                var ageGroups = {};
-                var municipalityCount = {};
-
-                entries.forEach(function(e) {
-                    genderCount[e.gender] = (genderCount[e.gender] || 0) + 1;
-                    municipalityCount[e.municipality] = (municipalityCount[e.municipality] || 0) + 1;
-                    var group = e.age < 17 ? '16' : e.age < 19 ? '17-18' : '19-20';
-                    ageGroups[group] = (ageGroups[group] || 0) + 1;
-                });
-
-                return { 
-                    total: total, 
-                    avgAge: avgAge.toFixed(1),
-                    genderCount: genderCount,
-                    ageGroups: ageGroups, 
-                    municipalityCount: municipalityCount 
-                };
-            }
-
             function updateStats() {
-                if (entries.length === 0) return;
-                
-                var stats = getStats();
-                if (!stats) return;
-
                 var totalEl = document.getElementById('statTotal');
-                var avgAgeEl = document.getElementById('statAvgAge');
                 
                 if (totalEl) totalEl.textContent = stats.total;
-                if (avgAgeEl) avgAgeEl.textContent = stats.avgAge;
 
                 var genderEl = document.getElementById('statGender');
                 if (genderEl) {
