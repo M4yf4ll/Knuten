@@ -2,170 +2,76 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>Ungdomsgården Knuten</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #fb923c 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .card {
-            background: white;
-            border-radius: 24px;
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1f2937;
-        }
-        .date-info { text-align: right; }
-        .date-text { color: #6b7280; font-size: 16px; margin-bottom: 8px; }
-        .visitor-count { font-size: 36px; font-weight: bold; color: #9333ea; }
-        .form-title { font-size: 24px; font-weight: bold; color: #1f2937; margin-bottom: 24px; }
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .header { flex-direction: column; text-align: center; }
-            .date-info { text-align: center; }
-        }
-        .form-group { margin-bottom: 16px; }
-        label {
-            display: block;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-        input, select {
-            width: 100%;
-            padding: 18px;
-            font-size: 18px;
-            border: 2px solid #d1d5db;
-            border-radius: 12px;
-            background: white;
-        }
-        input:focus, select:focus { border-color: #9333ea; outline: none; }
-        .btn {
-            width: 100%;
-            padding: 22px;
-            font-size: 22px;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(90deg, #9333ea, #ec4899);
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-        .btn:active { opacity: 0.8; }
-        .btn-secondary {
-            background: #10b981;
-            padding: 14px 24px;
-            font-size: 16px;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 4px;
-        }
-        .stats-toggle {
-            background: #f3f4f6;
-            color: #1f2937;
-            border: none;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 12px 20px;
-            border-radius: 12px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin: 24px 0;
-            padding-bottom: 24px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-        @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
-        .stat-box { padding: 20px; border-radius: 12px; }
-        .stat-box.purple { background: #f3e8ff; }
-        .stat-box.pink { background: #fce7f3; }
-        .stat-box.orange { background: #ffedd5; }
-        .stat-box.blue { background: #dbeafe; max-height: 200px; overflow-y: auto; }
-        .stat-title { font-weight: bold; color: #374151; margin-bottom: 12px; font-size: 16px; }
-        .stat-item { font-size: 14px; color: #6b7280; margin: 4px 0; }
-        .stat-value { font-weight: bold; }
-        .stat-value.purple { color: #9333ea; }
-        .stat-value.pink { color: #ec4899; }
-        .stat-value.orange { color: #fb923c; }
-        .stat-value.blue { color: #3b82f6; }
-        .button-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .export-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .hidden { display: none !important; }
-    </style>
+    <meta name="description" content="Anonym inskrivningslista för Ungdomsgården Knuten">
+    <!-- iPad/kiosk: kör som helskärmsapp från hemskärmen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Knuten">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪢</text></svg>">
+    <!-- Lekfull displayfont (fall tillbaka på rundade systemfonter offline) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
 </head>
 <body>
     <div class="container">
-        <div class="card">
+        <div class="card header-card">
             <div class="header">
-                <div class="title">👥 Ungdomsgården Knuten</div>
+                <div class="title"><span class="logo">🪢</span> Ungdomsgården Knuten</div>
                 <div class="date-info">
                     <div class="date-text" id="currentDate"></div>
-                    <div class="visitor-count"><span id="visitorCount">0</span> besökare</div>
+                    <div class="visitor-count"><span id="visitorCount" aria-live="polite">0</span> besökare</div>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="form-title">➕ Registrera besök</div>
-            <p class="stat-item">Inga namn eller individuella besöksuppgifter sparas. Endast dagens sammanräknade statistik sparas i den här webbläsaren.</p>
+            <p class="stat-item">Ditt förnamn sparas inte – det används bara för att hälsa dig välkommen. Endast anonym sammanräknad statistik sparas i webbläsaren (i 92 dagar).</p>
+            <div id="storageWarning" class="warning hidden">⚠️ Webbläsaren tillåter inte lagring. Besök kan inte registreras – kontakta ansvarig.</div>
+            <noscript><div class="warning">⚠️ JavaScript måste vara aktiverat för att registrera besök.</div></noscript>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Åldersgrupp</label>
-                    <select id="age">
+                    <label for="firstname">Förnamn</label>
+                    <input type="text" id="firstname" maxlength="30" autocomplete="off" placeholder="Skriv ditt förnamn">
+                </div>
+                <div class="form-group">
+                    <span class="label" id="ageLabel">Åldersgrupp</span>
+                    <select id="age" class="visually-hidden" tabindex="-1" aria-hidden="true">
                         <option value="">Välj åldersgrupp</option>
                         <option value="16">16 år</option>
                         <option value="17-18">17–18 år</option>
                         <option value="19-20">19–20 år</option>
                     </select>
+                    <div class="chip-row" id="ageChips" role="radiogroup" aria-labelledby="ageLabel">
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="16">16 år</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="17-18">17–18 år</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="19-20">19–20 år</button>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Kön</label>
-                    <select id="gender">
+                    <span class="label" id="genderLabel">Kön</span>
+                    <select id="gender" class="visually-hidden" tabindex="-1" aria-hidden="true">
                         <option value="">Välj kön</option>
                         <option value="Kille">Kille</option>
                         <option value="Tjej">Tjej</option>
                         <option value="Annan">Annan</option>
                     </select>
+                    <div class="chip-row" id="genderChips" role="radiogroup" aria-labelledby="genderLabel">
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Kille">Kille</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Tjej">Tjej</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Annan">Annan</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Kommun</label>
-                    <select id="municipality">
+                <div class="form-group span-all">
+                    <span class="label" id="municipalityLabel">Kommun</span>
+                    <select id="municipality" class="visually-hidden" tabindex="-1" aria-hidden="true">
                         <option value="">Välj kommun</option>
                         <option value="Brändö">Brändö</option>
                         <option value="Eckerö">Eckerö</option>
@@ -184,6 +90,24 @@
                         <option value="Sund">Sund</option>
                         <option value="Vårdö">Vårdö</option>
                     </select>
+                    <div class="chip-grid" id="municipalityChips" role="radiogroup" aria-labelledby="municipalityLabel">
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Brändö">Brändö</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Eckerö">Eckerö</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Finström">Finström</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Föglö">Föglö</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Geta">Geta</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Hammarland">Hammarland</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Jomala">Jomala</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Kumlinge">Kumlinge</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Kökar">Kökar</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Lemland">Lemland</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Lumparland">Lumparland</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Mariehamn">Mariehamn</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Saltvik">Saltvik</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Sottunga">Sottunga</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Sund">Sund</button>
+                        <button type="button" class="chip" role="radio" aria-checked="false" data-value="Vårdö">Vårdö</button>
+                    </div>
                 </div>
             </div>
             <button class="btn" type="button" id="submitBtn">Registrera besök</button>
@@ -191,15 +115,14 @@
 
         <div class="card">
             <div class="button-row">
-                <button class="stats-toggle" type="button" id="statsToggleBtn">
-                    📊 <span id="statsToggleText">Visa statistik</span>
+                <button class="stats-toggle" type="button" id="staffBtn">
+                    <span id="staffBtnIcon">🔒</span> <span id="staffBtnText">Personal – logga in</span>
                 </button>
-                <div class="export-buttons">
-                    <button class="btn-secondary hidden" type="button" id="exportStatsBtn">📊 Exportera statistik</button>
-                </div>
             </div>
 
-            <div id="statsSection" class="hidden">
+            <div id="staffSection" class="hidden">
+                <div class="form-title">📊 Statistik</div>
+                <div id="viewNotice" class="notice hidden"></div>
                 <div class="stats-grid">
                     <div class="stat-box purple">
                         <div class="stat-title">Översikt</div>
@@ -218,225 +141,61 @@
                         <div id="statMunicipality"></div>
                     </div>
                 </div>
+
+                <div class="staff-group">
+
+                    <div class="staff-group-title">�🗓️ Historik</div>
+                    <div class="history-row">
+                        <div class="form-group">
+                            <label for="historyDate">Välj datum</label>
+                            <input type="date" id="historyDate">
+                        </div>
+                        <button class="btn-secondary" type="button" id="todayBtn">Visa idag</button>
+                    </div>
+                </div>
+
+                <div class="staff-group">
+                    <div class="staff-group-title">📄 Export &amp; säkerhetskopia</div>
+                    <div class="btn-grid">
+                        <button class="btn-secondary" type="button" id="exportDayBtn">Exportera visad dag (CSV)</button>
+                        <button class="btn-secondary" type="button" id="exportAllBtn">Exportera alla dagar (CSV)</button>
+                        <button class="btn-secondary" type="button" id="backupBtn">Säkerhetskopiera (JSON)</button>
+                        <button class="btn-secondary" type="button" id="restoreBtn">Återställ säkerhetskopia</button>
+                        <input type="file" id="restoreInput" accept="application/json,.json" class="hidden">
+                    </div>
+                </div>
+
+                <div class="staff-group">
+                    <div class="staff-group-title">🛠️ Hantera</div>
+                    <div class="btn-grid">
+                        <button class="btn-secondary" type="button" id="undoBtn" disabled>↩️ Ångra senaste registrering</button>
+                        <button class="btn-secondary" type="button" id="changePinBtn">🔑 Ändra PIN-kod</button>
+                        <button class="btn-secondary danger" type="button" id="clearBtn">🗑️ Radera dagens statistik</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        (function() {
-            var today = new Date().toLocaleDateString('sv-SE');
-            var storageKey = 'knuten-stats-' + today;
-            var stats = { total: 0, genderCount: {}, ageGroups: {}, municipalityCount: {} };
+    <div id="pinModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pinTitle">
+        <div class="modal">
+            <div class="modal-title" id="pinTitle">PIN-kod krävs</div>
+            <p class="modal-text" id="pinMessage"></p>
+            <div class="form-group">
+                <label for="pinInput" id="pinInputLabel">PIN-kod</label>
+                <input type="password" id="pinInput" inputmode="numeric" autocomplete="off">
+            </div>
+            <div class="form-group hidden" id="pinNewGroup">
+                <label for="pinNewInput">Ny PIN-kod (minst 4 siffror)</label>
+                <input type="password" id="pinNewInput" inputmode="numeric" autocomplete="off">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-secondary gray" type="button" id="pinCancelBtn">Avbryt</button>
+                <button class="btn-secondary" type="button" id="pinOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
 
-            function cleanOldData() {
-                try {
-                    var allKeys = Object.keys(localStorage);
-                    
-                    allKeys.forEach(function(key) {
-                        if (key.startsWith('knuten-entries-') ||
-                            (key.startsWith('knuten-stats-') && key !== storageKey)) {
-                            localStorage.removeItem(key);
-                        }
-                    });
-                    return true;
-                } catch (e) {
-                    alert('Kunde inte rensa äldre inskrivningsdata. Ingen ny statistik har registrerats.');
-                    return false;
-                }
-            }
-
-            window.onload = function() {
-                var submitBtn = document.getElementById('submitBtn');
-                var storageReady = cleanOldData();
-
-                var dateEl = document.getElementById('currentDate');
-                if (dateEl) {
-                    dateEl.textContent = new Date().toLocaleDateString('sv-SE', { 
-                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-                    });
-                }
-
-                if (storageReady) {
-                    try {
-                        var saved = localStorage.getItem(storageKey);
-                        if (saved) stats = JSON.parse(saved);
-                    } catch (e) {
-                        alert('Kunde inte läsa dagens statistik. Inga nya besök kan registreras.');
-                        storageReady = false;
-                    }
-                }
-
-                if (submitBtn) {
-                    submitBtn.onclick = handleSubmit;
-                    submitBtn.disabled = !storageReady;
-                }
-
-                var statsBtn = document.getElementById('statsToggleBtn');
-                if (statsBtn) {
-                    statsBtn.onclick = toggleStats;
-                }
-
-                var exportStatsBtn = document.getElementById('exportStatsBtn');
-                if (exportStatsBtn) {
-                    exportStatsBtn.onclick = exportStats;
-                }
-                updateDisplay();
-            };
-
-            function handleSubmit() {
-                var ageEl = document.getElementById('age');
-                var genderEl = document.getElementById('gender');
-                var municipalityEl = document.getElementById('municipality');
-
-                if (!ageEl || !genderEl || !municipalityEl) {
-                    alert('Fel: Formuläret kunde inte laddas korrekt!');
-                    return;
-                }
-
-                var age = ageEl.value;
-                var gender = genderEl.value;
-                var municipality = municipalityEl.value;
-
-                if (!age || !gender || !municipality) {
-                    alert('Vänligen fyll i alla fält!');
-                    return;
-                }
-
-                var nextStats = {
-                    total: stats.total + 1,
-                    genderCount: Object.assign({}, stats.genderCount),
-                    ageGroups: Object.assign({}, stats.ageGroups),
-                    municipalityCount: Object.assign({}, stats.municipalityCount)
-                };
-                nextStats.genderCount[gender] = (nextStats.genderCount[gender] || 0) + 1;
-                nextStats.ageGroups[age] = (nextStats.ageGroups[age] || 0) + 1;
-                nextStats.municipalityCount[municipality] = (nextStats.municipalityCount[municipality] || 0) + 1;
-                
-                try {
-                    localStorage.setItem(storageKey, JSON.stringify(nextStats));
-                } catch (e) {
-                    alert('Kunde inte spara statistiken. Besöket har inte registrerats.');
-                    return;
-                }
-                stats = nextStats;
-                ageEl.value = '';
-                genderEl.value = '';
-                municipalityEl.value = '';
-                
-                updateDisplay();
-                alert('✅ Besöket har registrerats.');
-            }
-
-            function toggleStats() {
-                var section = document.getElementById('statsSection');
-                var text = document.getElementById('statsToggleText');
-                
-                if (!section || !text) return;
-                
-                if (section.classList.contains('hidden')) {
-                    section.classList.remove('hidden');
-                    text.textContent = 'Dölj statistik';
-                } else {
-                    section.classList.add('hidden');
-                    text.textContent = 'Visa statistik';
-                }
-            }
-
-            function exportStats() {
-                if (stats.total === 0) return;
-
-                var csv = 'STATISTIK FÖR ' + today + '\n\n';
-                csv += 'ÖVERSIKT\nTotalt besökare,' + stats.total + '\n\n';
-                csv += 'KÖNSFÖRDELNING\n';
-                for (var k in stats.genderCount) {
-                    csv += k + ',' + stats.genderCount[k] + '\n';
-                }
-                csv += '\nÅLDERSGRUPPER\n';
-                for (var k in stats.ageGroups) {
-                    csv += k + ' år,' + stats.ageGroups[k] + '\n';
-                }
-                csv += '\nKOMMUNER\n';
-                var sorted = Object.keys(stats.municipalityCount).sort(function(a,b) {
-                    return stats.municipalityCount[b] - stats.municipalityCount[a];
-                });
-                sorted.forEach(function(k) {
-                    csv += k + ',' + stats.municipalityCount[k] + '\n';
-                });
-                download(csv, 'knuten-statistik-' + today + '.csv');
-            }
-
-            function download(content, filename) {
-                try {
-                    var blob = new Blob(['\ufeff' + content], { type: 'text/csv;charset=utf-8;' });
-                    var url = URL.createObjectURL(blob);
-                    var a = document.createElement('a');
-                    a.href = url;
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    setTimeout(function() {
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }, 100);
-                    alert('✅ Nedladdad!');
-                } catch(e) {
-                    alert('Kunde inte exportera!');
-                }
-            }
-
-            function updateDisplay() {
-                var countEl = document.getElementById('visitorCount');
-                if (countEl) {
-                    countEl.textContent = stats.total;
-                }
-                
-                var exportStatsBtn = document.getElementById('exportStatsBtn');
-                
-                if (stats.total > 0) {
-                    if (exportStatsBtn) exportStatsBtn.classList.remove('hidden');
-                } else {
-                    if (exportStatsBtn) exportStatsBtn.classList.add('hidden');
-                }
-
-                updateStats();
-            }
-
-            function updateStats() {
-                var totalEl = document.getElementById('statTotal');
-                
-                if (totalEl) totalEl.textContent = stats.total;
-
-                var genderEl = document.getElementById('statGender');
-                if (genderEl) {
-                    var html = '';
-                    for (var k in stats.genderCount) {
-                        html += '<div class="stat-item">' + k + ': <span class="stat-value pink">' + stats.genderCount[k] + '</span></div>';
-                    }
-                    genderEl.innerHTML = html;
-                }
-
-                var ageEl = document.getElementById('statAge');
-                if (ageEl) {
-                    var html = '';
-                    for (var k in stats.ageGroups) {
-                        html += '<div class="stat-item">' + k + ' år: <span class="stat-value orange">' + stats.ageGroups[k] + '</span></div>';
-                    }
-                    ageEl.innerHTML = html;
-                }
-
-                var munEl = document.getElementById('statMunicipality');
-                if (munEl) {
-                    var html = '';
-                    var sorted = Object.keys(stats.municipalityCount).sort(function(a,b) {
-                        return stats.municipalityCount[b] - stats.municipalityCount[a];
-                    });
-                    sorted.forEach(function(k) {
-                        html += '<div class="stat-item">' + k + ': <span class="stat-value blue">' + stats.municipalityCount[k] + '</span></div>';
-                    });
-                    munEl.innerHTML = html;
-                }
-            }
-        })();
-    </script>
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 </body>
 </html>
